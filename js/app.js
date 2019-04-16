@@ -1,3 +1,8 @@
+/* redirect if not logged in */
+if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+}
+
 /* fetch all todos on load */
 fetch("http://localhost:3000/api/v1/todos", {
     'headers': {
@@ -121,4 +126,12 @@ document.querySelector(".app").addEventListener("click", e => {
             })
 
     }
+});
+
+
+// simple logout functionality
+document.querySelector(".option__logout").addEventListener("click", e => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+    e.preventDefault();
 });
