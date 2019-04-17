@@ -1,8 +1,10 @@
+const base_url = "https://todo-nodejs-goodbytes.herokuapp.com";
+
 var btnLogin = document.querySelector(".login button").addEventListener("click", (e) => {
     let username = document.querySelector('#email').value;
     let password = document.querySelector('#password').value;
 
-    fetch('http://localhost:3000/users/login', {
+    fetch(base_url + '/users/login', {
         method: "post",
         headers: {
             'Content-Type': 'application/json'

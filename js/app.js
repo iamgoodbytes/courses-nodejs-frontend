@@ -1,10 +1,12 @@
+const base_url = "https://todo-nodejs-goodbytes.herokuapp.com";
+
 /* redirect if not logged in */
 if (!localStorage.getItem("token")) {
     window.location.href = "login.html";
 }
 
 /* fetch all todos on load */
-fetch("http://localhost:3000/api/v1/todos", {
+fetch(base_url + "/api/v1/todos", {
     'headers': {
         'Authorization': 'Bearer ' + localStorage.getItem('token')
     }
@@ -40,7 +42,7 @@ input.addEventListener("keyup", e => {
     if (e.keyCode === 13) {
         // on enter
         let text = input.value;
-        fetch('http://localhost:3000/api/v1/todos', {
+        fetch(base_url + '/api/v1/todos', {
                 method: "post",
                 'headers': {
                     'Content-Type': 'application/json',
@@ -74,7 +76,7 @@ document.querySelector(".app").addEventListener("change", e => {
     if (e.target.classList.contains("todo__state")) {
         let todoId = e.target.getAttribute("data-id");
 
-        fetch('http://localhost:3000/api/v1/todos/' + todoId, {
+        fetch(base_url + '/api/v1/todos/' + todoId, {
                 method: "put",
                 'headers': {
                     'Content-Type': 'application/json',
@@ -104,7 +106,7 @@ document.querySelector(".app").addEventListener("click", e => {
     if (e.target.classList.contains("todo__delete")) {
         let todoId = e.target.getAttribute("data-id");
 
-        fetch('http://localhost:3000/api/v1/todos/' + todoId, {
+        fetch(base_url + '/api/v1/todos/' + todoId, {
                 method: "delete",
                 'headers': {
                     'Content-Type': 'application/json',
