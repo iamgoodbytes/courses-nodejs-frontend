@@ -23,7 +23,7 @@ var btnSignup = document.querySelector(".signup button").addEventListener("click
 
             let token = json.data.token;
             localStorage.setItem("token", token);
-            window.location.href = "app.html";
+            window.location.href = "index.html";
         }
     })
 });
