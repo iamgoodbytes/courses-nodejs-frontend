@@ -1,4 +1,24 @@
+// FRONTEND
+
 const base_url = "https://todo-nodejs-goodbytes.herokuapp.com";
+
+// PRIMUS LIVE
+primus = Primus.connect(base_url, {
+    reconnect: {
+        max: Infinity // Number: The max delay before we try to reconnect.
+            ,
+        min: 500 // Number: The minimum delay before we try reconnect.
+            ,
+        retries: 10 // Number: How many times we should try to reconnect.
+    }
+});
+
+primus.on('data', (json) => {
+    if (json.action === "addTodo") {
+        appendTodo(json.data);
+    }
+});
+
 
 /* redirect if not logged in */
 if (!localStorage.getItem("token")) {
@@ -36,6 +56,17 @@ fetch(base_url + "/api/v1/todos", {
     console.log("😭😭😭")
 });
 
+
+/* append a todo to the dom */
+let appendTodo = (json) => {
+    let todo = `<div class="todo">
+                    <input data-id="${json.data.todo._id}" type="checkbox" class="todo__state">  
+                    <div class="todo__text">${json.data.todo.text}</div>
+                    <a class="todo__delete" href="#" data-id="${json.data.todo._id}">delete</a>
+                </div>`;
+    document.querySelector(".todo__new ").insertAdjacentHTML('afterend', todo);
+}
+
 /* add a todo on enter */
 let input = document.querySelector(".todo__input");
 input.addEventListener("keyup", e => {
@@ -55,14 +86,16 @@ input.addEventListener("keyup", e => {
             .then(result => {
                 return result.json();
             }).then(json => {
-                let todo = `<div class="todo">
-                    <input data-id="${json.data.todo._id}" type="checkbox" class="todo__state">  
-                    <div class="todo__text">${json.data.todo.text}</div>
-                    <a class="todo__delete" href="#" data-id="${json.data.todo._id}">delete</a>
-                </div>`;
                 input.value = "";
                 input.focus();
-                document.querySelector(".todo__new ").insertAdjacentHTML('afterend', todo);
+
+                primus.write({
+                    "action": "addTodo",
+                    "data": json
+                });
+
+                //appendTodo(json);
+
             }).catch(err => {
                 console.log(err)
             })
